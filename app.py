@@ -62,21 +62,17 @@ name = st.text_input("ชื่อ")
 address = st.text_input("ที่อยู่")
 
 # เลือกแขวง/ตำบล โดยมีการเรียงลำดับและให้ผู้ใช้กรอกคำแนะนำ
-sub_district_input = st.text_input("กรอกตัวอักษรบางส่วนของแขวง/ตำบล")
-sub_district_options = sorted(data[data["TambonThaiShort"].str.contains(sub_district_input, na=False)]["TambonThaiShort"].unique())
-sub_district = st.selectbox("เลือกแขวง/ตำบล", options=sub_district_options)
+sub_district = st.selectbox(
+    "เลือกแขวง/ตำบล",
+    options=sorted(data["TambonThaiShort"].unique())
+)
 
 # เลือกเขต/อำเภอ โดยกรองจากแขวง/ตำบลที่เลือกและเรียงลำดับ
-district_input = st.text_input("กรอกตัวอักษรบางส่วนของเขต/อำเภอ")
-district_options = sorted(data[(data["TambonThaiShort"] == sub_district) & 
-                               (data["DistrictThaiShort"].str.contains(district_input, na=False))]["DistrictThaiShort"].unique())
+district_options = sorted(data[data["TambonThaiShort"] == sub_district]["DistrictThaiShort"].unique())
 district = st.selectbox("เลือกเขต/อำเภอ", options=district_options)
 
 # เลือกจังหวัด โดยกรองจากเขต/อำเภอและแขวง/ตำบลที่เลือกและเรียงลำดับ
-province_input = st.text_input("กรอกตัวอักษรบางส่วนของจังหวัด")
-province_options = sorted(data[(data["TambonThaiShort"] == sub_district) & 
-                               (data["DistrictThaiShort"] == district) &
-                               (data["ProvinceThai"].str.contains(province_input, na=False))]["ProvinceThai"].unique())
+province_options = sorted(data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"] == district)]["ProvinceThai"].unique())
 province = st.selectbox("เลือกจังหวัด", options=province_options)
 
 # รหัสไปรษณีย์โดยอัตโนมัติจากแขวง/ตำบล, เขต/อำเภอ และจังหวัดที่เลือก
