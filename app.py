@@ -3,7 +3,7 @@ import joblib
 import sklearn_crfsuite
 
 # โหลดโมเดล
-model = joblib.load("/mnt/data/model.joblib")
+model = joblib.load("model.joblib")
 
 # รายการคำหยุด
 stopwords = ["ผู้", "ที่", "ซึ่ง", "อัน"]
