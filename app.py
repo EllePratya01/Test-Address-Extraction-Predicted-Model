@@ -1,5 +1,6 @@
 import streamlit as st
 import joblib
+import pandas as pd
 import sklearn_crfsuite
 
 # โหลดโมเดล
@@ -48,7 +49,7 @@ def tokens_to_features(tokens, i):
 def predict(text):
     tokens = text.split()
     features = [tokens_to_features(tokens, i) for i in range(len(tokens))]
-    return model.predict([features])[0]
+    return model.predict([features])[0], tokens  # Return both predictions and tokens
 
 # สร้าง UI ใน Streamlit
 st.title("กรอกข้อมูลสำหรับการทำนาย")
@@ -67,8 +68,14 @@ if st.button("ทำนาย"):
     user_input = f"{name} {address} {sub_district} {district} {province} {postal_code}"
     
     # ทำนายผลลัพธ์จากโมเดล
-    prediction = predict(user_input)
+    predictions, tokens = predict(user_input)
     
+    # สร้าง DataFrame สำหรับการแสดงผล
+    results_df = pd.DataFrame({
+        "คำที่ผู้ใช้กรอก": tokens,
+        "ผลการทำนาย": predictions
+    })
+
     # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
-    st.write(prediction)
+    st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
