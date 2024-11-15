@@ -91,20 +91,20 @@ if st.button("ทำนาย"):
     # ทำนายผลลัพธ์จากโมเดล
     predictions, tokens = predict(user_input)
 
-    # กำหนดค่าคาดหวังสำหรับการคำนวณ Accuracy
-    expected_labels = ["O"] * len(name.split()) + ["ADDR"] * len(address.split()) + ["LOC"] * 3 + ["POST"]
-
     # สร้าง DataFrame สำหรับการแสดงผล
     results_df = pd.DataFrame({
         "คำที่ผู้ใช้กรอก": tokens,
         "ผลการทำนาย": predictions
     })
     
-    expected_results = pd.DataFrame({
-        "ผลที่คาดหวัง": expected_labels
-    })    
-    
     # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
     st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
-    st.dataframe(expected_results.T)
+
+# กำหนดค่าคาดหวังสำหรับการคำนวณ Accuracy
+expected_labels = ["O"] * len(name.split()) + ["ADDR"] * len(address.split()) + ["LOC"] * 3 + ["POST"]
+expected_results = pd.DataFrame({
+        "ผลที่คาดหวัง": expected_labels
+    })    
+st.write("ผลที่คาดหวัง:")
+st.dataframe(expected_results.T)
