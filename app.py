@@ -95,6 +95,7 @@ if st.button("ทำนาย"):
     results_df = pd.DataFrame({
         "คำที่ผู้ใช้กรอก": tokens,
         "ผลการทำนาย": predictions
+        "ผลที่คาดหวัง": predictions
     })
 
     # แสดงผลลัพธ์การทำนาย
