@@ -66,18 +66,18 @@ name = st.text_input("ชื่อ")
 
 # ฟิลด์ แขวง/ตำบล พร้อมการแนะนำ
 sub_district_input = st.text_input("แขวง/ตำบล")
-suggestions = get_suggestions("TambonThai", sub_district_input) if sub_district_input else []
-sub_district = st.selectbox("เลือกแขวง/ตำบล", options=suggestions) if suggestions.size > 0 else sub_district_input
+suggestions = list(get_suggestions("TambonThai", sub_district_input)) if sub_district_input else []
+sub_district = st.selectbox("เลือกแขวง/ตำบล", options=suggestions) if suggestions else sub_district_input
 
 # ฟิลด์ เขต/อำเภอ พร้อมการแนะนำ
 district_input = st.text_input("เขต/อำเภอ")
-suggestions = get_suggestions("DistrictThai", district_input) if district_input else []
-district = st.selectbox("เลือกเขต/อำเภอ", options=suggestions) if suggestions.size > 0 else district_input
+suggestions = list(get_suggestions("DistrictThai", district_input)) if district_input else []
+district = st.selectbox("เลือกเขต/อำเภอ", options=suggestions) if suggestions else district_input
 
 # ฟิลด์ จังหวัด พร้อมการแนะนำ
 province_input = st.text_input("จังหวัด")
-suggestions = get_suggestions("ProvinceThai", province_input) if province_input else []
-province = st.selectbox("เลือกจังหวัด", options=suggestions) if suggestions.size > 0 else province_input
+suggestions = list(get_suggestions("ProvinceThai", province_input)) if province_input else []
+province = st.selectbox("เลือกจังหวัด", options=suggestions) if suggestions else province_input
 
 # ฟิลด์ รหัสไปรษณีย์ จะทำการแนะนำรหัสที่ตรงกัน
 if sub_district and district and province:
