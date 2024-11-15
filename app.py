@@ -62,21 +62,21 @@ name = st.text_input("ชื่อ")
 address = st.text_input("ที่อยู่")
 
 # เลือกแขวง/ตำบล
-sub_district_options = data["TambonThai"].unique()
+sub_district_options = data["TambonThaiShort"].unique()
 sub_district = st.selectbox("เลือกแขวง/ตำบล", options=sub_district_options)
 
 # เลือกเขต/อำเภอ โดยกรองจากแขวง/ตำบลที่เลือก
-district_options = data[data["TambonThai"] == sub_district]["DistrictThai"].unique()
+district_options = data[data["TambonThaiShort"] == sub_district]["DistrictThaiShort"].unique()
 district = st.selectbox("เลือกเขต/อำเภอ", options=district_options)
 
 # เลือกจังหวัด โดยกรองจากเขต/อำเภอและแขวง/ตำบลที่เลือก
-province_options = data[(data["TambonThai"] == sub_district) & (data["DistrictThai"] == district)]["ProvinceThai"].unique()
+province_options = data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"] == district)]["ProvinceThai"].unique()
 province = st.selectbox("เลือกจังหวัด", options=province_options)
 
 # รหัสไปรษณีย์โดยอัตโนมัติจากแขวง/ตำบล, เขต/อำเภอ และจังหวัดที่เลือก
 postal_codes = data[(data["ProvinceThai"] == province) & 
-                    (data["DistrictThai"] == district) & 
-                    (data["TambonThai"] == sub_district)]["PostCodeMain"].unique()
+                    (data["DistrictThaiShort"] == district) & 
+                    (data["TambonThaiShort"] == sub_district)]["PostCodeMain"].unique()
 postal_code = postal_codes[0] if postal_codes.size > 0 else "ไม่พบรหัสไปรษณีย์"
 
 st.write("รหัสไปรษณีย์:", postal_code)
