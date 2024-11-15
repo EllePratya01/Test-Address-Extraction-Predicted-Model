@@ -97,10 +97,14 @@ if st.button("ทำนาย"):
     # สร้าง DataFrame สำหรับการแสดงผล
     results_df = pd.DataFrame({
         "คำที่ผู้ใช้กรอก": tokens,
-        "ผลการทำนาย": predictions,
-        "ผลที่คาดหวัง": expected_labels
+        "ผลการทำนาย": predictions
     })
-
+    
+    expected_results = pd.DataFrame({
+        "ผลที่คาดหวัง": expected_labels
+    })    
+    
     # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
     st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
+    st.dataframe(expected_results.T)
