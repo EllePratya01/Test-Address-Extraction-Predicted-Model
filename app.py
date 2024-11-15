@@ -110,4 +110,4 @@ if st.button("ทำนาย"):
     st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
     
     # แสดงผล Accuracy
-    st.write(f"ความแม่นยำของการทำนาย: {accuracy:.2f}%")
+    st.write(f"**ความแม่นยำของการทำนาย: {accuracy:.2f}%**")
