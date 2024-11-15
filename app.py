@@ -101,10 +101,4 @@ if st.button("ทำนาย"):
     st.write("ผลการทำนาย:")
     st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
 
-# กำหนดค่าคาดหวังสำหรับการคำนวณ Accuracy
-expected_labels = ["O"] * len(name.split()) + ["ADDR"] * len(address.split()) + ["LOC"] * 3 + ["POST"]
-expected_results = pd.DataFrame({
-        "ผลที่คาดหวัง": expected_labels
-    })    
-st.write("ผลที่คาดหวัง:")
-st.dataframe(expected_results.T)
+st.write("ผลที่คาดหวัง: OOOLLL")
