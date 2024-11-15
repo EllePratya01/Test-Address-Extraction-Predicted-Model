@@ -72,5 +72,3 @@ if st.button("ทำนาย"):
     # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
     st.write(prediction)
-
-streamlit run app.py
