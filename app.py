@@ -90,12 +90,15 @@ if st.button("ทำนาย"):
     
     # ทำนายผลลัพธ์จากโมเดล
     predictions, tokens = predict(user_input)
-    
+
+    # กำหนดค่าคาดหวังสำหรับการคำนวณ Accuracy
+    expected_labels = ["O"] * len(name.split()) + ["ADDR"] * len(address.split()) + ["LOC"] * 3 + ["POST"]
+
     # สร้าง DataFrame สำหรับการแสดงผล
     results_df = pd.DataFrame({
         "คำที่ผู้ใช้กรอก": tokens,
-        "ผลการทำนาย": predictions
-        "ผลที่คาดหวัง": predictions
+        "ผลการทำนาย": predictions,
+        "ผลที่คาดหวัง": expected_labels
     })
 
     # แสดงผลลัพธ์การทำนาย
