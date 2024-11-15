@@ -69,28 +69,3 @@ province = st.selectbox("เลือกจังหวัด (Province)", optio
 postal_codes = data[(data["ProvinceThai"] == province) & (data["DistrictThaiShort"] == district) & (data["TambonThaiShort"] == sub_district)]["PostCodeMain"].unique()
 postal_code = postal_codes[0] if postal_codes.size > 0 else "ไม่พบรหัสไปรษณีย์"
 st.write("รหัสไปรษณีย์ (Postal Code):", postal_code)
-
-# Prediction and Accuracy Calculation
-if st.button("ทำนาย"):
-    user_input = f"{name} {address} {sub_district} {district} {province} {postal_code}"
-    predictions, tokens = predict(user_input)
-
-    # Expected labels
-    expected_labels = ["O"] * len(name.split()) + ["ADDR"] * len(address.split()) + ["LOC"] * 3 + ["POST"]
-
-    # Accuracy calculation
-    correct_predictions = sum(1 for pred, exp in zip(predictions, expected_labels) if pred == exp)
-    accuracy = (correct_predictions / len(expected_labels)) * 100
-
-    # Display results
-    results_df = pd.DataFrame({
-        "คำที่ผู้ใช้กรอก": tokens,
-        "ผลการทำนาย": predictions,
-        "ผลที่คาดหวัง": expected_labels
-    })
-
-    st.write("ผลการทำนาย:")
-    st.dataframe(results_df.T)  # Display horizontally
-
-    # Show Accuracy
-    st.write(f"**ความแม่นยำของการทำนาย: {accuracy:.2f}%**")
