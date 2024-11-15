@@ -91,23 +91,12 @@ if st.button("ทำนาย"):
     # ทำนายผลลัพธ์จากโมเดล
     predictions, tokens = predict(user_input)
     
-    # คำตอบที่คาดหวังสำหรับ Accuracy
-    expected_labels = ["O", "ADDR", "LOC", "LOC", "LOC", "POST"]
-    
-    # คำนวณความแม่นยำ
-    correct_predictions = sum([1 for pred, exp in zip(predictions, expected_labels) if pred == exp])
-    accuracy = (correct_predictions / len(expected_labels)) * 100
-
     # สร้าง DataFrame สำหรับการแสดงผล
     results_df = pd.DataFrame({
         "คำที่ผู้ใช้กรอก": tokens,
-        "ผลการทำนาย": predictions,
-        "ผลที่คาดหวัง": expected_labels
+        "ผลการทำนาย": predictions
     })
 
     # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
     st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
-    
-    # แสดงผล Accuracy
-    st.write(f"**ความแม่นยำของการทำนาย: {accuracy:.2f}%**")
