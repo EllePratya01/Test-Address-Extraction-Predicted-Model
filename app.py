@@ -61,20 +61,19 @@ st.title("กรอกข้อมูลสำหรับการทำนา�
 name = st.text_input("ชื่อ")
 address = st.text_input("ที่อยู่")
 
-# ให้ผู้ใช้เริ่มพิมพ์ตัวอักษรบางส่วนเพื่อกรองตัวเลือกสำหรับแขวง/ตำบล
-sub_district_input = st.text_input("ค้นหาแขวง/ตำบล")
-sub_district_options = sorted(data[data["TambonThaiShort"].str.contains(sub_district_input, na=False)]["TambonThaiShort"].unique()) if sub_district_input else []
-sub_district = st.selectbox("เลือกแขวง/ตำบล", options=[""] + sub_district_options)
+# เลือกแขวง/ตำบล โดยมีการเรียงลำดับและให้ผู้ใช้กรอกคำแนะนำ
+sub_district = st.selectbox(
+    "เลือกแขวง/ตำบล",
+    options=sorted(data["TambonThaiShort"].unique())
+)
 
-# ให้ผู้ใช้เริ่มพิมพ์ตัวอักษรบางส่วนเพื่อกรองตัวเลือกสำหรับเขต/อำเภอ
-district_input = st.text_input("ค้นหาเขต/อำเภอ")
-district_options = sorted(data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"].str.contains(district_input, na=False))]["DistrictThaiShort"].unique()) if district_input else []
-district = st.selectbox("เลือกเขต/อำเภอ", options=[""] + district_options)
+# เลือกเขต/อำเภอ โดยกรองจากแขวง/ตำบลที่เลือกและเรียงลำดับ
+district_options = sorted(data[data["TambonThaiShort"] == sub_district]["DistrictThaiShort"].unique())
+district = st.selectbox("เลือกเขต/อำเภอ", options=district_options)
 
-# ให้ผู้ใช้เริ่มพิมพ์ตัวอักษรบางส่วนเพื่อกรองตัวเลือกสำหรับจังหวัด
-province_input = st.text_input("ค้นหาจังหวัด")
-province_options = sorted(data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"] == district) & (data["ProvinceThai"].str.contains(province_input, na=False))]["ProvinceThai"].unique()) if province_input else []
-province = st.selectbox("เลือกจังหวัด", options=[""] + province_options)
+# เลือกจังหวัด โดยกรองจากเขต/อำเภอและแขวง/ตำบลที่เลือกและเรียงลำดับ
+province_options = sorted(data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"] == district)]["ProvinceThai"].unique())
+province = st.selectbox("เลือกจังหวัด", options=province_options)
 
 # รหัสไปรษณีย์โดยอัตโนมัติจากแขวง/ตำบล, เขต/อำเภอ และจังหวัดที่เลือก
 postal_codes = data[(data["ProvinceThai"] == province) & 
