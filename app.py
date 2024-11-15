@@ -1,18 +1,15 @@
 import streamlit as st
 import joblib
 import pandas as pd
-import sklearn_crfsuite
 
-# โหลดข้อมูลจากไฟล์ Excel
+# Load data and model
 data = pd.read_excel("thaidata.xlsx")
-
-# โหลดโมเดล
 model = joblib.load("model.joblib")
 
-# รายการคำหยุด
+# Stopwords list
 stopwords = ["ผู้", "ที่", "ซึ่ง", "อัน"]
 
-# ฟังก์ชันสร้างคุณสมบัติจากโทเค็น
+# Feature extraction function
 def tokens_to_features(tokens, i):
     word = tokens[i]
     features = {
@@ -48,66 +45,52 @@ def tokens_to_features(tokens, i):
 
     return features
 
-# ฟังก์ชันสำหรับทำนาย
+# Prediction function
 def predict(text):
     tokens = text.split()
     features = [tokens_to_features(tokens, i) for i in range(len(tokens))]
-    return model.predict([features])[0], tokens  # Return both predictions and tokens
+    return model.predict([features])[0], tokens
 
-# สร้าง UI ใน Streamlit
+# Streamlit UI
 st.markdown("<h2 style='text-align: center; font-size: 28px;'>Address Extraction Predicted Model</h2>", unsafe_allow_html=True)
 
-# รับข้อมูลจากผู้ใช้
+# User inputs
 name = st.text_input("ชื่อ (Name)")
 address = st.text_input("ที่อยู่ (Address)")
 
-# เลือกแขวง/ตำบล โดยมีตัวเลือกเริ่มต้นเป็นช่องว่าง
-sub_district = st.selectbox(
-    "เลือกแขวง/ตำบล (Sub-District)",
-    options=[""] + sorted(data["TambonThaiShort"].unique())
-)
-
-# เลือกเขต/อำเภอ โดยกรองจากแขวง/ตำบลที่เลือกและมีตัวเลือกเริ่มต้นเป็นช่องว่าง
+# Select options
+sub_district = st.selectbox("เลือกแขวง/ตำบล (Sub-District)", options=[""] + sorted(data["TambonThaiShort"].unique()))
 district_options = sorted(data[data["TambonThaiShort"] == sub_district]["DistrictThaiShort"].unique()) if sub_district else []
 district = st.selectbox("เลือกเขต/อำเภอ (District)", options=[""] + district_options)
-
-# เลือกจังหวัด โดยกรองจากเขต/อำเภอและแขวง/ตำบลที่เลือกและมีตัวเลือกเริ่มต้นเป็นช่องว่าง
 province_options = sorted(data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"] == district)]["ProvinceThai"].unique()) if district else []
 province = st.selectbox("เลือกจังหวัด (Province)", options=[""] + province_options)
 
-# รหัสไปรษณีย์โดยอัตโนมัติจากแขวง/ตำบล, เขต/อำเภอ และจังหวัดที่เลือก
-postal_codes = data[(data["ProvinceThai"] == province) & 
-                    (data["DistrictThaiShort"] == district) & 
-                    (data["TambonThaiShort"] == sub_district)]["PostCodeMain"].unique()
+# Auto-fill postal code
+postal_codes = data[(data["ProvinceThai"] == province) & (data["DistrictThaiShort"] == district) & (data["TambonThaiShort"] == sub_district)]["PostCodeMain"].unique()
 postal_code = postal_codes[0] if postal_codes.size > 0 else "ไม่พบรหัสไปรษณีย์"
-
 st.write("รหัสไปรษณีย์ (Postal Code):", postal_code)
 
-# เมื่อผู้ใช้กดปุ่มให้ทำการทำนาย
+# Prediction and Accuracy Calculation
 if st.button("ทำนาย"):
-    # รวมข้อมูลทั้งหมดเป็นข้อความเดียว
     user_input = f"{name} {address} {sub_district} {district} {province} {postal_code}"
-    
-    # ทำนายผลลัพธ์จากโมเดล
     predictions, tokens = predict(user_input)
-    
-    # คำตอบที่คาดหวังสำหรับ Accuracy
+
+    # Expected labels
     expected_labels = ["O"] * len(name.split()) + ["ADDR"] * len(address.split()) + ["LOC"] * 3 + ["POST"]
-    
-    # คำนวณความแม่นยำ
-    correct_predictions = sum([1 for pred, exp in zip(predictions, expected_labels) if pred == exp])
+
+    # Accuracy calculation
+    correct_predictions = sum(1 for pred, exp in zip(predictions, expected_labels) if pred == exp)
     accuracy = (correct_predictions / len(expected_labels)) * 100
 
-    # สร้าง DataFrame สำหรับการแสดงผล
+    # Display results
     results_df = pd.DataFrame({
         "คำที่ผู้ใช้กรอก": tokens,
         "ผลการทำนาย": predictions,
         "ผลที่คาดหวัง": expected_labels
     })
 
-    # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
-    st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
-    
-    # แสดงผล Accuracy
+    st.dataframe(results_df.T)  # Display horizontally
+
+    # Show Accuracy
     st.write(f"**ความแม่นยำของการทำนาย: {accuracy:.2f}%**")
