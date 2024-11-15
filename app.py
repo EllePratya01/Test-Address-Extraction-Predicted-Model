@@ -63,19 +63,17 @@ st.title("กรอกข้อมูลสำหรับการทำนา�
 
 # รับข้อมูลจากผู้ใช้พร้อมการแนะนำ
 name = st.text_input("ชื่อ")
+address = st.text_input("ที่อยู่")
 
 # ฟิลด์ แขวง/ตำบล พร้อมการแนะนำ
-sub_district_input = st.text_input("แขวง/ตำบล")
 suggestions = list(get_suggestions("TambonThai", sub_district_input)) if sub_district_input else []
 sub_district = st.selectbox("เลือกแขวง/ตำบล", options=suggestions) if suggestions else sub_district_input
 
 # ฟิลด์ เขต/อำเภอ พร้อมการแนะนำ
-district_input = st.text_input("เขต/อำเภอ")
 suggestions = list(get_suggestions("DistrictThai", district_input)) if district_input else []
 district = st.selectbox("เลือกเขต/อำเภอ", options=suggestions) if suggestions else district_input
 
 # ฟิลด์ จังหวัด พร้อมการแนะนำ
-province_input = st.text_input("จังหวัด")
 suggestions = list(get_suggestions("ProvinceThai", province_input)) if province_input else []
 province = st.selectbox("เลือกจังหวัด", options=suggestions) if suggestions else province_input
 
