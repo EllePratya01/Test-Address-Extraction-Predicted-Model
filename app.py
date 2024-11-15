@@ -55,25 +55,25 @@ def predict(text):
     return model.predict([features])[0], tokens  # Return both predictions and tokens
 
 # สร้าง UI ใน Streamlit
-st.title("กรอกข้อมูลสำหรับการทำนาย")
+st.title("Address Extraction Predicted Model")
 
 # รับข้อมูลจากผู้ใช้
-name = st.text_input("ชื่อ")
-address = st.text_input("ที่อยู่")
+name = st.text_input("ชื่อ (Name)")
+address = st.text_input("ที่อยู่ (Address)")
 
 # เลือกแขวง/ตำบล โดยมีตัวเลือกเริ่มต้นเป็นช่องว่าง
 sub_district = st.selectbox(
-    "เลือกแขวง/ตำบล",
+    "เลือกแขวง/ตำบล (Sub-District)",
     options=[""] + sorted(data["TambonThaiShort"].unique())
 )
 
 # เลือกเขต/อำเภอ โดยกรองจากแขวง/ตำบลที่เลือกและมีตัวเลือกเริ่มต้นเป็นช่องว่าง
 district_options = sorted(data[data["TambonThaiShort"] == sub_district]["DistrictThaiShort"].unique()) if sub_district else []
-district = st.selectbox("เลือกเขต/อำเภอ", options=[""] + district_options)
+district = st.selectbox("เลือกเขต/อำเภอ (District)", options=[""] + district_options)
 
 # เลือกจังหวัด โดยกรองจากเขต/อำเภอและแขวง/ตำบลที่เลือกและมีตัวเลือกเริ่มต้นเป็นช่องว่าง
 province_options = sorted(data[(data["TambonThaiShort"] == sub_district) & (data["DistrictThaiShort"] == district)]["ProvinceThai"].unique()) if district else []
-province = st.selectbox("เลือกจังหวัด", options=[""] + province_options)
+province = st.selectbox("เลือกจังหวัด (Province)", options=[""] + province_options)
 
 # รหัสไปรษณีย์โดยอัตโนมัติจากแขวง/ตำบล, เขต/อำเภอ และจังหวัดที่เลือก
 postal_codes = data[(data["ProvinceThai"] == province) & 
@@ -81,7 +81,7 @@ postal_codes = data[(data["ProvinceThai"] == province) &
                     (data["TambonThaiShort"] == sub_district)]["PostCodeMain"].unique()
 postal_code = postal_codes[0] if postal_codes.size > 0 else "ไม่พบรหัสไปรษณีย์"
 
-st.write("รหัสไปรษณีย์:", postal_code)
+st.write("รหัสไปรษณีย์ (Postal Code):", postal_code)
 
 # เมื่อผู้ใช้กดปุ่มให้ทำการทำนาย
 if st.button("ทำนาย"):
