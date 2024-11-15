@@ -100,7 +100,3 @@ if st.button("ทำนาย"):
     # แสดงผลลัพธ์การทำนาย
     st.write("ผลการทำนาย:")
     st.dataframe(results_df.T)  # ใช้ .T เพื่อแสดงในแนวนอน
-
-    expected_output = "OOOLLL"
-    st.write("ผลที่คาดหวัง:", expected_output)
-
