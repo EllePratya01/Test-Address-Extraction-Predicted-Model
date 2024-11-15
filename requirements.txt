@@ -1,3 +1,4 @@
 streamlit
 joblib
 sklearn_crfsuite
+openpyxl
