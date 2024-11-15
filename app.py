@@ -57,21 +57,17 @@ def predict(text):
 # สร้าง UI ใน Streamlit
 st.title("กรอกข้อมูลสำหรับการทำนาย")
 
-# รับข้อมูลจากผู้ใช้
-name = st.text_input("ชื่อ")
-address = st.text_input("ที่อยู่")
-
-# เลือกแขวง/ตำบล โดยกรองจากเขต/อำเภอและจังหวัดที่เลือก
-sub_district_options = data[(data["ProvinceThai"] == province) & (data["DistrictThai"] == district)]["TambonThai"].unique()
-sub_district = st.selectbox("เลือกแขวง/ตำบล", options=sub_district_options)
+# เลือกจังหวัด
+province_options = data["ProvinceThai"].unique()
+province = st.selectbox("เลือกจังหวัด", options=province_options)
 
 # เลือกเขต/อำเภอ โดยกรองจากจังหวัดที่เลือก
 district_options = data[data["ProvinceThai"] == province]["DistrictThai"].unique()
 district = st.selectbox("เลือกเขต/อำเภอ", options=district_options)
 
-# เลือกจังหวัด
-province_options = data["ProvinceThai"].unique()
-province = st.selectbox("เลือกจังหวัด", options=province_options)
+# เลือกแขวง/ตำบล โดยกรองจากเขต/อำเภอและจังหวัดที่เลือก
+sub_district_options = data[(data["ProvinceThai"] == province) & (data["DistrictThai"] == district)]["TambonThai"].unique()
+sub_district = st.selectbox("เลือกแขวง/ตำบล", options=sub_district_options)
 
 # รหัสไปรษณีย์โดยอัตโนมัติจากแขวง/ตำบล, เขต/อำเภอ และจังหวัดที่เลือก
 postal_codes = data[(data["ProvinceThai"] == province) & 
