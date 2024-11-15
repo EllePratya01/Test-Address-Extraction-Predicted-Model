@@ -55,7 +55,7 @@ def predict(text):
     return model.predict([features])[0], tokens  # Return both predictions and tokens
 
 # สร้าง UI ใน Streamlit
-st.title("Address Extraction Predicted Model")
+st.markdown("<h2 style='text-align: center; font-size: 24px;'>Address Extraction Predicted Model</h2>", unsafe_allow_html=True)
 
 # รับข้อมูลจากผู้ใช้
 name = st.text_input("ชื่อ (Name)")
